@@ -77,7 +77,10 @@ esa.io API との通信を行うための基本的なクライアント機能を
     ```bash
     uv run pytest
     ```
-
+- **テストカバレッジを表示**
+    ```bash
+    uv run pytest --cov=. tests
+    ```
 ---
 
 ※サーバー全体の設計・開発まとめは docs/20250504/mcp_esa_development_summary.md を参照。
