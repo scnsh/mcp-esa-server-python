@@ -1,0 +1,46 @@
+[project]
+name = "mcp-esa-server"
+version = "0.1.0"
+description = "MCP server for esa.io API"
+authors = [
+    {name = "Naoki Numaguchi", email = "redheru@gmail.com"},
+]
+dependencies = [
+    # "fastapi", # Removed fastapi as it's no longer directly used
+    "requests",
+    "python-dotenv",
+    "mcp[cli]>=1.7.1",
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.8",
+    "httpx>=0.28.1", # Keep httpx for potential future testing needs
+    "pytest-mock>=3.14.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313" # プロジェクトで使用するPythonバージョンに合わせてください
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"] # 基本的なルールセットを選択
+
+[tool.uv]
+dev-dependencies = [
+    "pytest",
+    "ruff",
+    "python-dotenv",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "."
+]
+markers = [
+    "integration: mark test as integration test (requires network and .env)",
+]
