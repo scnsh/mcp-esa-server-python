@@ -3,14 +3,9 @@ import os
 from typing import Annotated, Any
 
 from dotenv import load_dotenv
-
-# Remove FastAPI and HTTPException imports as they are no longer directly used
-# from fastapi import FastAPI, HTTPException
 from mcp.server.fastmcp import FastMCP
 from pydantic import Field
 
-# Use direct import as files are now in the same directory
-# from src.esa_client import EsaClient
 from esa_client import EsaClient
 
 # Load environment variables from .env file
@@ -20,9 +15,6 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Remove FastAPI app initialization
-# app = FastAPI()
-
 # Create MCP instance
 mcp = FastMCP("esa-mcp-server")
 
@@ -30,7 +22,6 @@ mcp = FastMCP("esa-mcp-server")
 esa_token = os.getenv("ESA_TOKEN")
 esa_team_name = os.getenv("ESA_TEAM_NAME")
 
-# 追加: 環境変数の値をログに出力
 logger.info("Attempting to initialize EsaClient.")
 logger.info(f"ESA_TOKEN from env: {esa_token}")
 logger.info(f"ESA_TEAM_NAME from env: {esa_team_name}")
@@ -41,8 +32,6 @@ if not esa_token or not esa_team_name:
     esa_client = None
 else:
     try:
-        # Initialize EsaClient without arguments, let it read env vars internally
-        # esa_client = EsaClient(api_token=esa_token, team_name=esa_team_name)
         esa_client = EsaClient()
         logger.info("EsaClient initialized successfully.")
     except ValueError as e:  # Catch potential ValueError from EsaClient init
@@ -143,32 +132,27 @@ def posts_create(
     """
     if esa_client is None:
         logger.error("EsaClient is not initialized. Cannot create post.")
-        raise RuntimeError("EsaClient not initialized")  # Changed from HTTPException
+        raise RuntimeError("EsaClient not initialized")
     try:
         logger.info(f"Creating post with name: {name}")
-
-        # MODIFIED SECTION: Handle empty string category as None
-        # This ensures that if category is an empty string (default or explicitly passed),
-        # it's treated as 'no category' and will be removed from the payload if None.
-        effective_category = category if category else None
 
         payload = {
             "name": name,
             "body_md": body_md,
             "tags": tags or [],
-            "category": effective_category,
+            "category": category,
             "wip": wip,
             "message": message,
         }
         # Remove None values from payload
         payload = {k: v for k, v in payload.items() if v is not None}
 
-        new_post = esa_client.create_post(payload=payload)  # Removed await
+        new_post = esa_client.create_post(payload=payload)
         logger.info(f"Successfully created post: {new_post.get('url')}")
         return new_post
     except Exception as e:
         logger.error(f"Error creating post: {e}", exc_info=True)
-        raise RuntimeError(f"Error creating post: {e}") from e  # Changed from HTTPException
+        raise RuntimeError(f"Error creating post: {e}") from e
 
 
 @mcp.tool()
@@ -194,7 +178,7 @@ def posts_update(
     """
     if esa_client is None:
         logger.error("EsaClient is not initialized. Cannot update post.")
-        raise RuntimeError("EsaClient not initialized")  # Changed from HTTPException
+        raise RuntimeError("EsaClient not initialized")
     try:
         logger.info(f"Updating post number: {post_number}")
         payload = {
@@ -211,7 +195,6 @@ def posts_update(
         if not payload:
             logger.warning(f"No update parameters provided for post {post_number}.")
             # Consider returning current post details or raising a more specific error
-            # For now, returning a message indicating no action was taken.
             return {"message": f"No update parameters provided for post {post_number}. Nothing changed."}
 
         updated_post = esa_client.update_post(post_number=post_number, payload=payload)
@@ -219,7 +202,7 @@ def posts_update(
         return updated_post
     except Exception as e:
         logger.error(f"Error updating post {post_number}: {e}", exc_info=True)
-        raise RuntimeError(f"Error updating post: {e}") from e  # Changed from HTTPException
+        raise RuntimeError(f"Error updating post: {e}") from e
 
 
 @mcp.tool()
@@ -231,34 +214,18 @@ def posts_delete(post_number: int) -> dict[str, Any]:
     """
     if esa_client is None:
         logger.error("EsaClient is not initialized. Cannot delete post.")
-        raise RuntimeError("EsaClient not initialized")  # Changed from HTTPException
+        raise RuntimeError("EsaClient not initialized")
     try:
-        logger.info(f"Deleting post number: {post_number}")
-        esa_client.delete_post(post_number)  # Removed await
+        esa_client.delete_post(post_number)
         logger.info(f"Successfully deleted post {post_number}.")
         # Return empty dict upon successful deletion as per esa.io API
-        # (204 No Content)
         return {}
     except Exception as e:
         logger.error(f"Error deleting post {post_number}: {e}", exc_info=True)
-        raise RuntimeError(f"Error deleting post: {e}") from e  # Changed from HTTPException
+        raise RuntimeError(f"Error deleting post: {e}") from e
 
-
-# Mount MCP router using sse_app
-# app.include_router(mcp.router)
-# app.mount("/mcp", app=mcp.sse_app())
-# @app.get("/")
-# async def root():
-#    return {"message": "MCP Server for esa.io is running"}
-
-
-# TODO: Add MCP tools based on EsaClient methods
-# TODO: Add error handling for EsaClient initialization failures
 
 # Use mcp.run() to start the server when script is executed directly
 if __name__ == "__main__":
-    # Remove uvicorn import and run
-    # import uvicorn
-    # uvicorn.run(app, host="0.0.0.0", port=8000)
     logger.info("Starting MCP server...")
     mcp.run()

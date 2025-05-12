@@ -96,7 +96,7 @@ uv sync
 3. **AIチャットやツールパネルからAPIを呼び出し**
 
 - AIチャット上で `user_get_info` や `posts_get_list` などのMCPツールを呼び出すことで、esa.io APIと連携した操作が可能です。
-- `mcp-esa-server  を使って記事の作成をお願いします` などとチャット上で書き込むことで利用できます。
+- `mcp-esa-serverを使って記事の作成をお願いします` などとチャット上で書き込むことで利用できます。
 
 ## ライセンス (License)
 
@@ -107,7 +107,7 @@ uv sync
 
 このプロジェクトの一部では、以下のMIT Licenseで公開されているコードを参照しています。
 
-- **[参照元プロジェクト名]**
+- **esa-mcp-server**
   - GitHubリポジトリ: [https://github.com/masseater/esa-mcp-server]
   - ライセンス: MIT License
 

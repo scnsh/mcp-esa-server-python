@@ -34,7 +34,7 @@ ESA_TEAM_NAME=your_team_name
 - **引数:** `post_number`（記事番号）
 - **戻り値:** 記事詳細情報を含む辞書（例: `{ "post": {...} }`）
 
-### posts_create(name: str, body_md: str, tags: list[str] | None = None, category: str | None = None, wip: bool | None = True, message: str | None = None)
+### posts_create(name: str, body_md: str, tags: list[str] = [], category: str = "", wip: bool = True, message: str = "")
 - **説明:** 新しい記事を作成します。
 - **引数:** `name`, `body_md`, `tags`, `category`, `wip`, `message`
 - **戻り値:** 作成された記事の情報（例: `{ "post": {...} }`）

@@ -122,11 +122,6 @@ if __name__ == "__main__":
     try:
         client = EsaClient()
         logger.info(f"EsaClient initialized for team: {client.team_name}")
-        # Add a simple test request here later if needed
-        print("Attempting to get user info...")
-        user_info = client.get_user()
-        print("Successfully retrieved user info:")
-        print(user_info)
     except ValueError as e:
         logger.error(f"Initialization failed: {e}")
     except requests.exceptions.RequestException as e:

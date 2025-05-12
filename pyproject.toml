@@ -6,7 +6,6 @@ authors = [
     {name = "Naoki Numaguchi", email = "redheru@gmail.com"},
 ]
 dependencies = [
-    # "fastapi", # Removed fastapi as it's no longer directly used
     "requests",
     "python-dotenv",
     "mcp[cli]>=1.7.1",

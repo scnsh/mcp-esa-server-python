@@ -6,9 +6,7 @@
 
 ## サーバー設計・技術スタック
 
-- **FastAPI**: Webフレームワーク
 - **FastMCP**: MCPプロトコル実装
-- **aiohttp**: 非同期HTTPクライアント
 - **pytest/ruff**: テスト・フォーマット
 
 ## 主要機能
