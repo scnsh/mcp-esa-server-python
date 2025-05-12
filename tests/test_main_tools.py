@@ -29,9 +29,6 @@ def mock_esa_client_none_in_main():
         yield mock_client_none
 
 
-# --- Tests for user_get_info ---
-
-
 def test_user_get_info_success(mock_esa_client_in_main):
     """Test user_get_info MCP tool successfully returns user data."""
     # Arrange
@@ -61,9 +58,6 @@ def test_user_get_info_client_raises_exception(mock_esa_client_in_main):
     # Act & Assert
     with pytest.raises(RuntimeError, match="Error getting user info: Tool API Error"):
         user_get_info()
-
-
-# --- Tests for posts_get_list ---
 
 
 def test_posts_get_list_success_no_params(mock_esa_client_in_main):
@@ -114,9 +108,6 @@ def test_posts_get_list_client_raises_exception(mock_esa_client_in_main):
         posts_get_list(q="tool_test")
 
 
-# --- Tests for posts_get_detail ---
-
-
 def test_posts_get_detail_success(mock_esa_client_in_main):
     """Test posts_get_detail MCP tool successfully returns data for a post."""
     # Arrange
@@ -150,9 +141,6 @@ def test_posts_get_detail_client_raises_exception(mock_esa_client_in_main):
         posts_get_detail(post_number=post_number)
 
 
-# --- Tests for posts_create ---
-
-
 def test_posts_create_success(mock_esa_client_in_main):
     """Test posts_create successfully calls esa_client.create_post and returns data."""
     # Arrange
@@ -164,15 +152,15 @@ def test_posts_create_success(mock_esa_client_in_main):
     message = "Test commit message"
 
     expected_payload_to_esa_client = {
-        "post": {
-            "name": name,
-            "body_md": body_md,
-            "tags": tags,
-            "category": category,
-            "wip": wip,
-            "message": message,
-        }
+        "name": name,
+        "body_md": body_md,
+        "tags": tags,
+        "category": category,
+        "wip": wip,
+        "message": message,
     }
+    filtered_payload = {k: v for k, v in expected_payload_to_esa_client.items() if v is not None}
+
     expected_response_from_tool = {
         "url": "https://example.esa.io/posts/123",
         "name": name,
@@ -191,7 +179,7 @@ def test_posts_create_success(mock_esa_client_in_main):
 
     # Assert
     assert result == expected_response_from_tool
-    mock_esa_client_in_main.create_post.assert_called_once_with(payload=expected_payload_to_esa_client)
+    mock_esa_client_in_main.create_post.assert_called_once_with(payload=filtered_payload)
 
 
 def test_posts_create_success_minimal_params(mock_esa_client_in_main):
@@ -199,19 +187,15 @@ def test_posts_create_success_minimal_params(mock_esa_client_in_main):
     # Arrange
     name = "Minimal Test Post"
     body_md = "Minimal body."
-    # Default values for wip=True, tags=[], category=None, message=None
     expected_payload_to_esa_client = {
-        "post": {
-            "name": name,
-            "body_md": body_md,
-            "tags": [],  # main.py sets tags or []
-            "wip": True,  # main.py default for wip is True
-            # category and message will be None, and thus removed by the dict comprehension
-        }
+        "name": name,
+        "body_md": body_md,
+        "tags": [],
+        "category": "",
+        "wip": True,
+        "message": "",
     }
-    # Adjust for category and message being None and thus excluded from payload by the tool
-    filtered_payload = {k: v for k, v in expected_payload_to_esa_client["post"].items() if v is not None}
-    expected_payload_to_esa_client_after_filtering = {"post": filtered_payload}
+    filtered_payload = {k: v for k, v in expected_payload_to_esa_client.items() if v is not None}
 
     expected_response_from_tool = {
         "url": "https://example.esa.io/posts/124",
@@ -224,7 +208,7 @@ def test_posts_create_success_minimal_params(mock_esa_client_in_main):
 
     # Assert
     assert result == expected_response_from_tool
-    mock_esa_client_in_main.create_post.assert_called_once_with(payload=expected_payload_to_esa_client_after_filtering)
+    mock_esa_client_in_main.create_post.assert_called_once_with(payload=filtered_payload)
 
 
 def test_posts_create_client_not_initialized(mock_esa_client_none_in_main):
@@ -244,9 +228,6 @@ def test_posts_create_client_raises_exception(mock_esa_client_in_main):
         posts_create(name="Test", body_md="Test")
 
 
-# --- Tests for posts_update ---
-
-
 def test_posts_update_success(mock_esa_client_in_main):
     """Test posts_update successfully calls esa_client.update_post with all params."""
     # Arrange
@@ -259,15 +240,15 @@ def test_posts_update_success(mock_esa_client_in_main):
     message = "Update commit message"
 
     expected_payload_to_esa_client = {
-        "post": {
-            "name": name,
-            "body_md": body_md,
-            "tags": tags,
-            "category": category,
-            "wip": wip,
-            "message": message,
-        }
+        "name": name,
+        "body_md": body_md,
+        "tags": tags,
+        "category": category,
+        "wip": wip,
+        "message": message,
     }
+    filtered_payload = {k: v for k, v in expected_payload_to_esa_client.items() if v is not None}
+
     expected_response_from_tool = {
         "url": f"https://example.esa.io/posts/{post_number}",
         "name": name,
@@ -288,7 +269,7 @@ def test_posts_update_success(mock_esa_client_in_main):
     # Assert
     assert result == expected_response_from_tool
     mock_esa_client_in_main.update_post.assert_called_once_with(
-        post_number=post_number, payload=expected_payload_to_esa_client
+        post_number=post_number, payload=filtered_payload
     )
 
 
@@ -297,13 +278,10 @@ def test_posts_update_success_partial_params(mock_esa_client_in_main):
     # Arrange
     post_number = 456
     name = "Partially Updated Title"
-    # Only name is provided for update, other fields are None
-
     expected_payload_to_esa_client = {
-        "post": {
-            "name": name,
-        }
+        "name": name,
     }
+    filtered_payload = {k: v for k, v in expected_payload_to_esa_client.items() if v is not None}
     expected_response_from_tool = {
         "url": f"https://example.esa.io/posts/{post_number}",
         "name": name,
@@ -316,7 +294,7 @@ def test_posts_update_success_partial_params(mock_esa_client_in_main):
     # Assert
     assert result == expected_response_from_tool
     mock_esa_client_in_main.update_post.assert_called_once_with(
-        post_number=post_number, payload=expected_payload_to_esa_client
+        post_number=post_number, payload=filtered_payload
     )
 
 
@@ -351,9 +329,6 @@ def test_posts_update_client_raises_exception(mock_esa_client_in_main):
     # Act & Assert
     with pytest.raises(RuntimeError, match="Error updating post: Update API Error"):
         posts_update(post_number=post_number, name="Test Update Fail")
-
-
-# --- Tests for posts_delete ---
 
 
 def test_posts_delete_success(mock_esa_client_in_main):
