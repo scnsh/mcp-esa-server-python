@@ -67,7 +67,7 @@ esa.io API との通信を行うための基本的なクライアント機能を
 
 - **ユニットテストのみ実行:**
     ```bash
-    uv run pytest tests/
+    uv run pytest tests/ -m "not integration"
     ```
 - **インテグレーションテストのみ実行:**
     ```bash
