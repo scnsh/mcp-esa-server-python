@@ -12,7 +12,7 @@ dependencies = [
 ]
 requires-python = ">=3.11"
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 
 [project.optional-dependencies]
 dev = [
@@ -34,6 +34,7 @@ dev-dependencies = [
     "pytest",
     "ruff",
     "python-dotenv",
+    "uv>=0.7.3",
 ]
 
 [tool.pytest.ini_options]
@@ -43,7 +44,3 @@ pythonpath = [
 markers = [
     "integration: mark test as integration test (requires network and .env)",
 ]
-
-[tool.setuptools]
-packages = ["esa_client"]
-py_modules = ["main"]

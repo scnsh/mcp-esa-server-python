@@ -18,17 +18,17 @@ jobs:
       with:
         python-version: "3.13"
 
-    - name: Set up uv
-      uses: astral-sh/setup-uv@v1
-
-    - name: Create virtual environment
-      run: uv venv -p 3.13
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: "0.7.3"
+        cache: true
 
     - name: Install dependencies
-      run: uv pip install .[dev]
-
-    - name: Run ruff format check
-      run: ruff format --check .
+      run: uv sync --frozen --all-extras --dev
 
     - name: Run pytest
-      run: pytest
+      run: uv run pytest -v
+
+    - name: Run ruff format check
+      run: uv run ruff format --check .
