@@ -268,9 +268,7 @@ def test_posts_update_success(mock_esa_client_in_main):
 
     # Assert
     assert result == expected_response_from_tool
-    mock_esa_client_in_main.update_post.assert_called_once_with(
-        post_number=post_number, payload=filtered_payload
-    )
+    mock_esa_client_in_main.update_post.assert_called_once_with(post_number=post_number, payload=filtered_payload)
 
 
 def test_posts_update_success_partial_params(mock_esa_client_in_main):
@@ -293,9 +291,7 @@ def test_posts_update_success_partial_params(mock_esa_client_in_main):
 
     # Assert
     assert result == expected_response_from_tool
-    mock_esa_client_in_main.update_post.assert_called_once_with(
-        post_number=post_number, payload=filtered_payload
-    )
+    mock_esa_client_in_main.update_post.assert_called_once_with(post_number=post_number, payload=filtered_payload)
 
 
 def test_posts_update_no_params_provided(mock_esa_client_in_main, caplog):
