@@ -1,23 +1,23 @@
 import logging
-import os
 
 import requests
-from dotenv import load_dotenv
 
-load_dotenv()
+# from dotenv import load_dotenv
+
+# load_dotenv()
 logger = logging.getLogger(__name__)
 
 
 class EsaClient:
-    def __init__(self):
-        self.token = os.getenv("ESA_TOKEN")
-        self.team_name = os.getenv("ESA_TEAM_NAME")
+    def __init__(self, token: str, team_name: str):
+        self.token = token
+        self.team_name = team_name
 
         if not self.token:
-            logger.error("Environment variable ESA_TOKEN is not set.")
+            logger.error("Token is required but was not provided.")
             raise ValueError("ESA_TOKEN is required")
         if not self.team_name:
-            logger.error("Environment variable ESA_TEAM_NAME is not set.")
+            logger.error("Team name is required but was not provided.")
             raise ValueError("ESA_TEAM_NAME is required")
 
         self.base_url = f"https://api.esa.io/v1/teams/{self.team_name}"
@@ -118,6 +118,9 @@ class EsaClient:
 
 # Example usage (optional, for testing during development)
 if __name__ == "__main__":
+    from dotenv import load_dotenv
+
+    load_dotenv()
     logging.basicConfig(level=logging.INFO)
     try:
         client = EsaClient()

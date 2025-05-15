@@ -7,16 +7,9 @@ from esa_client import EsaClient
 
 
 @pytest.fixture
-def mock_env(monkeypatch):
-    "Set up environment variables for testing."
-    monkeypatch.setenv("ESA_TOKEN", "test_token")
-    monkeypatch.setenv("ESA_TEAM_NAME", "test_team")
-
-
-@pytest.fixture
-def client(mock_env):
-    "Return an instance of EsaClient with mocked env vars."
-    return EsaClient()
+def client():
+    "Return an instance of EsaClient with specified token and team_name."
+    return EsaClient(token="test_token", team_name="test_team")
 
 
 def test_esa_client_initialization(client):
@@ -27,20 +20,20 @@ def test_esa_client_initialization(client):
     assert client.session.headers["Authorization"] == f"Bearer {client.token}"
 
 
-def test_esa_client_initialization_missing_token(monkeypatch):
-    "Test ValueError is raised if ESA_TOKEN is missing."
-    monkeypatch.delenv("ESA_TOKEN", raising=False)  # Ensure it's removed if exists
-    monkeypatch.setenv("ESA_TEAM_NAME", "test_team")
+def test_esa_client_initialization_missing_token():
+    "Test ValueError is raised if token is missing or invalid."
     with pytest.raises(ValueError, match="ESA_TOKEN is required"):
-        EsaClient()
+        EsaClient(token=None, team_name="test_team")
+    with pytest.raises(ValueError, match="ESA_TOKEN is required"):
+        EsaClient(token="", team_name="test_team")
 
 
-def test_esa_client_initialization_missing_team_name(monkeypatch):
-    "Test ValueError is raised if ESA_TEAM_NAME is missing."
-    monkeypatch.setenv("ESA_TOKEN", "test_token")
-    monkeypatch.delenv("ESA_TEAM_NAME", raising=False)  # Ensure it's removed if exists
+def test_esa_client_initialization_missing_team_name():
+    "Test ValueError is raised if team_name is missing or invalid."
     with pytest.raises(ValueError, match="ESA_TEAM_NAME is required"):
-        EsaClient()
+        EsaClient(token="test_token", team_name=None)
+    with pytest.raises(ValueError, match="ESA_TEAM_NAME is required"):
+        EsaClient(token="test_token", team_name="")
 
 
 @patch("esa_client.requests.Session.request")

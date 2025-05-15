@@ -32,7 +32,7 @@ if not esa_token or not esa_team_name:
     esa_client = None
 else:
     try:
-        esa_client = EsaClient()
+        esa_client = EsaClient(token=esa_token, team_name=esa_team_name)
         logger.info("EsaClient initialized successfully.")
     except ValueError as e:  # Catch potential ValueError from EsaClient init
         logger.error(f"Failed to initialize EsaClient: {e}")

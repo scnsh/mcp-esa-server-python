@@ -1,3 +1,4 @@
+import os
 import random
 import time
 
@@ -11,18 +12,32 @@ from esa_client import EsaClient
 load_dotenv()
 
 
+@pytest.fixture(scope="module")
+def integration_client():
+    token = os.getenv("ESA_TOKEN")
+    team_name = os.getenv("ESA_TEAM_NAME")
+    if not token or not team_name:
+        pytest.skip("ESA_TOKEN or ESA_TEAM_NAME not set for integration tests. Skipping integration tests.")
+    try:
+        client = EsaClient(token=token, team_name=team_name)
+        return client
+    except ValueError as e:
+        pytest.fail(f"Failed to initialize EsaClient for integration tests: {e}. Is .env configured correctly?")
+    except Exception as e:
+        pytest.fail(f"An unexpected error occurred during EsaClient initialization for integration tests: {e}")
+
+
 # Note: These tests require a valid .env file with ESA_TOKEN and ESA_TEAM_NAME
 # and will make actual API calls to esa.io.
 # They might be skipped by default unless explicitly run.
 
 
 @pytest.mark.integration
-def test_get_user_integration():
+def test_get_user_integration(integration_client):
     "Test get_user against the actual esa.io API."
+    client = integration_client
     try:
-        # Create a real client instance (loads .env)
-        client = EsaClient()
-        print(f"\nRunning integration test for team: {client.team_name}")
+        print(f"\nRunning get_user_integration test for team: {client.team_name}")
         user_data = client.get_user()
         print(f"Received user data: {user_data}")
 
@@ -32,8 +47,6 @@ def test_get_user_integration():
         assert "email" in user_data
         print("Integration test passed.")
 
-    except ValueError as e:
-        pytest.fail(f"Integration test setup failed: {e}. Is .env configured correctly?")
     except requests.exceptions.RequestException as e:
         pytest.fail(f"Integration test API call failed: {e}")
     except Exception as e:
@@ -41,10 +54,10 @@ def test_get_user_integration():
 
 
 @pytest.mark.integration
-def test_get_posts_integration():
+def test_get_posts_integration(integration_client):
     "Test get_posts against the actual esa.io API (no params)."
+    client = integration_client
     try:
-        client = EsaClient()
         print(f"\nRunning get_posts integration test for team: {client.team_name}")
         posts_data = client.get_posts()
         posts_list = posts_data.get("posts", [])
@@ -79,12 +92,12 @@ def test_get_posts_integration():
 
 
 @pytest.mark.integration
-def test_get_posts_pagination_integration():
+def test_get_posts_pagination_integration(integration_client):
     "Test get_posts pagination against the actual esa.io API."
+    client = integration_client
     test_page = 2
     test_per_page = 5
     try:
-        client = EsaClient()
         print(f"\nRunning get_posts pagination integration test (page={test_page}, per_page={test_per_page})")
         posts_data = client.get_posts(page=test_page, per_page=test_per_page)
         posts_list = posts_data.get("posts", [])
@@ -122,13 +135,13 @@ def test_get_posts_pagination_integration():
 
 
 @pytest.mark.integration
-def test_get_post_integration():
+def test_get_post_integration(integration_client):
     "Test get_post against the actual esa.io API (existing post)."
+    client = integration_client
     # Note: Assumes post number 1 exists in the test team.
     # Adjust post_number if necessary for your test environment.
     test_post_number = 1
     try:
-        client = EsaClient()
         print(f"\nRunning get_post integration test for post #{test_post_number}")
         post_data = client.get_post(post_number=test_post_number)
         print(f"Received post title: {post_data.get('name')}")
@@ -153,12 +166,12 @@ def test_get_post_integration():
 
 
 @pytest.mark.integration
-def test_get_post_not_found_integration():
+def test_get_post_not_found_integration(integration_client):
     "Test get_post against the actual esa.io API (non-existent post)."
+    client = integration_client
     # Use a post number that is guaranteed not to exist (e.g., 0 or a very large number)
     test_post_number = 0
     try:
-        client = EsaClient()
         print(f"\nRunning get_post integration test for non-existent post #{test_post_number}")
         with pytest.raises(requests.exceptions.HTTPError) as exc_info:
             client.get_post(post_number=test_post_number)
@@ -180,9 +193,9 @@ def test_get_post_not_found_integration():
 
 
 @pytest.mark.integration
-def test_create_post_integration():
+def test_create_post_integration(integration_client):
     """Test create_post and verify the created post."""
-    client = EsaClient()
+    client = integration_client
     unique_name = f"Test Post - {int(time.time())}"
     post_payload = {
         "name": unique_name,
@@ -240,9 +253,9 @@ def test_create_post_integration():
 
 
 @pytest.mark.integration
-def test_delete_post_integration():
+def test_delete_post_integration(integration_client):
     """Test create_post, then delete_post, and verify deletion."""
-    client = EsaClient()
+    client = integration_client
     unique_name = f"Test Post for Deletion - {int(time.time())}"
     post_payload = {
         "name": unique_name,
@@ -284,9 +297,9 @@ def test_delete_post_integration():
 
 
 @pytest.mark.integration
-def test_delete_post_non_existent_integration():
+def test_delete_post_non_existent_integration(integration_client):
     """Test delete_post with a non-existent post_number."""
-    client = EsaClient()
+    client = integration_client
     non_existent_post_number = 0
     with pytest.raises(requests.exceptions.HTTPError) as excinfo:
         client.delete_post(non_existent_post_number)
@@ -295,9 +308,9 @@ def test_delete_post_non_existent_integration():
 
 
 @pytest.mark.integration
-def test_update_post_integration():
+def test_update_post_integration(integration_client):
     """Test creating, updating, and verifying a post."""
-    client = EsaClient()
+    client = integration_client
     original_name = f"Original Post Title - {int(time.time())}"
     updated_name = f"Updated Post Title - {int(time.time())}"
     post_payload = {
@@ -354,9 +367,9 @@ def test_update_post_integration():
 
 
 @pytest.mark.integration
-def test_update_post_not_found_integration():
+def test_update_post_not_found_integration(integration_client):
     """Test updating a non-existent post."""
-    client = EsaClient()
+    client = integration_client
     non_existent_post_number = 0  # A post number that is guaranteed not to exist
     update_payload = {"name": "Attempt to update non-existent post", "body_md": "This should not succeed."}
 
@@ -368,9 +381,9 @@ def test_update_post_not_found_integration():
 
 
 @pytest.mark.integration
-def test_create_post_with_all_fields_integration():
+def test_create_post_with_all_fields_integration(integration_client):
     """Test create_post with all optional fields and verify them."""
-    client = EsaClient()
+    client = integration_client
     unique_suffix = int(time.time())
     post_name = f"Test All Fields - {unique_suffix}"
     post_body = f"Body for all fields test created at {unique_suffix}."
