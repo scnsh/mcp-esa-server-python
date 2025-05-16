@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
-from esa_client import EsaClient
+from src.mcp_esa_server.esa_client import EsaClient
 
 
 @pytest.fixture
@@ -36,7 +36,7 @@ def test_esa_client_initialization_missing_team_name():
         EsaClient(token="test_token", team_name="")
 
 
-@patch("esa_client.requests.Session.request")
+@patch("src.mcp_esa_server.esa_client.requests.Session.request")
 def test_get_user_success(mock_request, client):
     "Test the get_user method success case."
     # Arrange: Configure the mock response
@@ -54,7 +54,7 @@ def test_get_user_success(mock_request, client):
     assert user_data == expected_user_data
 
 
-@patch("esa_client.requests.Session.request")
+@patch("src.mcp_esa_server.esa_client.requests.Session.request")
 def test_get_user_api_error(mock_request, client):
     "Test the get_user method handles API errors."
     # Arrange: Configure the mock to raise an HTTPError
@@ -68,7 +68,7 @@ def test_get_user_api_error(mock_request, client):
 # --- Tests for get_posts --- #
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_get_posts_success_no_params(mock_request, client):
     "Test get_posts success with no parameters."
     # Arrange
@@ -83,7 +83,7 @@ def test_get_posts_success_no_params(mock_request, client):
     assert posts_data == expected_response
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_get_posts_success_with_query(mock_request, client):
     "Test get_posts success with a search query."
     # Arrange
@@ -99,7 +99,7 @@ def test_get_posts_success_with_query(mock_request, client):
     assert posts_data == expected_response
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_get_posts_success_with_pagination(mock_request, client):
     "Test get_posts success with pagination parameters."
     # Arrange
@@ -116,7 +116,7 @@ def test_get_posts_success_with_pagination(mock_request, client):
     assert posts_data == expected_response
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_get_posts_success_with_all_params(mock_request, client):
     "Test get_posts success with all parameters."
     # Arrange
@@ -134,7 +134,7 @@ def test_get_posts_success_with_all_params(mock_request, client):
     assert posts_data == expected_response
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_get_posts_api_error(mock_request, client):
     "Test get_posts handles API errors from _request."
     # Arrange
@@ -148,7 +148,7 @@ def test_get_posts_api_error(mock_request, client):
 # --- Tests for get_post --- #
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_get_post_success(mock_request, client):
     "Test get_post success case."
     # Arrange
@@ -164,7 +164,7 @@ def test_get_post_success(mock_request, client):
     assert post_data == expected_response
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_get_post_api_error(mock_request, client):
     "Test get_post handles API errors from _request."
     # Arrange
@@ -179,7 +179,7 @@ def test_get_post_api_error(mock_request, client):
 # --- Tests for create_post (method to be added to EsaClient) ---
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_create_post_success(mock_request, client):
     """Test create_post successfully creates a post and returns its data."""
     # Arrange
@@ -195,7 +195,7 @@ def test_create_post_success(mock_request, client):
     assert result == expected_response
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_create_post_api_error(mock_request, client):
     """Test create_post handles API errors from _request."""
     # Arrange
@@ -210,7 +210,7 @@ def test_create_post_api_error(mock_request, client):
 # --- Tests for update_post (method to be added to EsaClient) ---
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_update_post_success(mock_request, client):
     """Test update_post successfully updates a post and returns its data."""
     # Arrange
@@ -227,7 +227,7 @@ def test_update_post_success(mock_request, client):
     assert result == expected_response
 
 
-@patch("esa_client.EsaClient._request")
+@patch("src.mcp_esa_server.esa_client.EsaClient._request")
 def test_update_post_api_error(mock_request, client):
     """Test update_post handles API errors from _request."""
     # Arrange

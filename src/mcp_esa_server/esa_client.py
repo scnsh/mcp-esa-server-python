@@ -2,9 +2,6 @@ import logging
 
 import requests
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
 logger = logging.getLogger(__name__)
 
 
@@ -118,12 +115,13 @@ class EsaClient:
 
 # Example usage (optional, for testing during development)
 if __name__ == "__main__":
+    import os
     from dotenv import load_dotenv
 
     load_dotenv()
     logging.basicConfig(level=logging.INFO)
     try:
-        client = EsaClient()
+        client = EsaClient(os.getenv("ESA_TOKEN"), os.getenv("ESA_TEAM_NAME"))
         logger.info(f"EsaClient initialized for team: {client.team_name}")
     except ValueError as e:
         logger.error(f"Initialization failed: {e}")

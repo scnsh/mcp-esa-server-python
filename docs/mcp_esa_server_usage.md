@@ -52,11 +52,11 @@ ESA_TEAM_NAME=your_team_name
 ## 4. サーバーの起動
 
 ```bash
-uv run mcp run main.py
+uv run mcp run src/mcp_esa_server/server.py
 ```
 または開発モード
 ```bash
-uv run mcp dev main.py
+uv run mcp dev src/mcp_esa_server/server.py
 ```
 
 サーバーはデフォルトで `http://localhost:6274` で起動し、MCPエンドポイントは `/mcp` です。

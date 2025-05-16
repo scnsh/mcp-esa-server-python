@@ -22,6 +22,9 @@ dev = [
     "pytest-mock>=3.14.0",
 ]
 
+[project.scripts]
+mcp-esa-server = "src.mcp_esa_server.server:main"
+
 [tool.ruff]
 line-length = 120
 target-version = "py313" # プロジェクトで使用するPythonバージョンに合わせてください
