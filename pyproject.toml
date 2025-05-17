@@ -1,18 +1,30 @@
 [project]
 name = "mcp-esa-server"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for esa.io API"
-authors = [
-    {name = "Naoki Numaguchi", email = "redheru@gmail.com"},
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
     "requests",
     "python-dotenv",
     "mcp[cli]>=1.7.1",
 ]
-requires-python = ">=3.11"
-readme = "README.md"
-license = {text = "MIT"}
+
+[[project.authors]]
+name = "scnsh"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project.optional-dependencies]
 dev = [
@@ -22,8 +34,15 @@ dev = [
     "pytest-mock>=3.14.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/scnsh/mcp-esa-server-python"
+Repository = "https://github.com/scnsh/mcp-esa-server-python"
+
 [project.scripts]
-mcp-esa-server = "src.mcp_esa_server.server:main"
+mcp-esa-server = "mcp_esa_server.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_esa_server"]
 
 [tool.ruff]
 line-length = 120

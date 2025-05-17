@@ -31,11 +31,7 @@ if not esa_token or not esa_team_name:
     esa_client = None
 else:
     try:
-<<<<<<< HEAD:main.py
         esa_client = EsaClient(token=esa_token, team_name=esa_team_name)
-=======
-        esa_client = EsaClient(esa_token, esa_team_name)
->>>>>>> d398b26 (feat: 🎸 move codes to src dir):src/mcp_esa_server/server.py
         logger.info("EsaClient initialized successfully.")
     except ValueError as e:  # Catch potential ValueError from EsaClient init
         logger.error(f"Failed to initialize EsaClient: {e}")
