@@ -39,7 +39,7 @@ Homepage = "https://github.com/scnsh/mcp-esa-server-python"
 Repository = "https://github.com/scnsh/mcp-esa-server-python"
 
 [project.scripts]
-mcp-esa-server = "mcp_esa_server.server:main"
+mcp-esa-server = "mcp_esa_server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mcp_esa_server"]
