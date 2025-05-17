@@ -3,7 +3,7 @@ import os
 from typing import Annotated, Any
 
 from dotenv import load_dotenv
-from esa_client import EsaClient
+from .esa_client import EsaClient
 from mcp.server.fastmcp import FastMCP
 from pydantic import Field
 
