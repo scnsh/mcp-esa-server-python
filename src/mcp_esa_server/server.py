@@ -1,12 +1,12 @@
 import logging
 import os
+import sys
 from typing import Annotated, Any
 
 from dotenv import load_dotenv
+from .esa_client import EsaClient
 from mcp.server.fastmcp import FastMCP
 from pydantic import Field
-
-from esa_client import EsaClient
 
 # Load environment variables from .env file
 load_dotenv()
@@ -15,16 +15,16 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Create MCP instance
-mcp = FastMCP("esa-mcp-server")
-
 # Get environment variables
 esa_token = os.getenv("ESA_TOKEN")
 esa_team_name = os.getenv("ESA_TEAM_NAME")
 
-logger.info("Attempting to initialize EsaClient.")
-logger.info(f"ESA_TOKEN from env: {esa_token}")
-logger.info(f"ESA_TEAM_NAME from env: {esa_team_name}")
+logger.debug("Attempting to initialize EsaClient.")
+logger.debug(f"ESA_TOKEN from env (for EsaClient): {esa_token}")
+logger.debug(f"ESA_TEAM_NAME from env (for EsaClient): {esa_team_name}")
+
+# Create MCP instance
+mcp = FastMCP("esa-mcp-server")
 
 # Initialize EsaClient
 if not esa_token or not esa_team_name:
@@ -224,8 +224,11 @@ def posts_delete(post_number: int) -> dict[str, Any]:
         logger.error(f"Error deleting post {post_number}: {e}", exc_info=True)
         raise RuntimeError(f"Error deleting post: {e}") from e
 
+def main():
+    """MCPサーバーを起動するためのメイン関数"""
+    logger.info("Starting MCP server via main()...")
+    mcp.run()
 
 # Use mcp.run() to start the server when script is executed directly
 if __name__ == "__main__":
-    logger.info("Starting MCP server...")
-    mcp.run()
+    main()

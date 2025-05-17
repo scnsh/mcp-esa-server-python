@@ -73,7 +73,9 @@ uv sync
         "--directory",
         "<プロジェクトの絶対パス>",
         "run",
-        "main.py"
+        "-m"
+        "mcp_esa_server.server"
+
       ],
       "env": {
         "ESA_TEAM_NAME": "<your-team-name>",

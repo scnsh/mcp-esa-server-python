@@ -6,7 +6,7 @@ import pytest
 import requests
 from dotenv import load_dotenv
 
-from esa_client import EsaClient
+from src.mcp_esa_server.esa_client import EsaClient
 
 # Load environment variables from .env file
 load_dotenv()
