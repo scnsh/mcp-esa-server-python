@@ -231,6 +231,4 @@ def main():
 
 # Use mcp.run() to start the server when script is executed directly
 if __name__ == "__main__":
-    # logger.info("Starting MCP server...") # この行は main() 内に移動または削除しても良い
-    # mcp.run() # これを main() の呼び出しに変更
     main()
