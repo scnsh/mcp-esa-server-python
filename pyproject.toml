@@ -1,6 +1,6 @@
 [project]
 name = "mcp-esa-server"
-version = "0.1.1"
+version = "0.1.8"
 description = "MCP server for esa.io API"
 readme = "README.md"
 requires-python = ">=3.11"
