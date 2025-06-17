@@ -101,7 +101,6 @@ uv sync
 ## ライセンス (License)
 
 このプロジェクトは [MIT License](./LICENSE) の下で公開されています。
-(注: `LICENSE` ファイルがまだリポジトリにない場合は、別途追加する必要があります。)
 
 ## 使用している外部コード / Dependencies
 
