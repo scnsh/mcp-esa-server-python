@@ -2,9 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-# Assuming main.py is in the parent directory of tests, or path is configured
-# For this example, let's assume 'main' can be imported due to pyproject.toml settings or structure.
-from main import (
+from src.mcp_esa_server.server import (
     posts_create,
     posts_delete,
     posts_get_detail,
@@ -18,14 +16,14 @@ from main import (
 @pytest.fixture
 def mock_esa_client_in_main():
     # Patch 'main.esa_client' which is used by the MCP tools
-    with patch("main.esa_client", new_callable=MagicMock) as mock_client:
+    with patch("src.mcp_esa_server.server.esa_client", new_callable=MagicMock) as mock_client:
         yield mock_client
 
 
 # Fixture to mock a non-initialized esa_client in main.py
 @pytest.fixture
 def mock_esa_client_none_in_main():
-    with patch("main.esa_client", None) as mock_client_none:
+    with patch("src.mcp_esa_server.server.esa_client", None) as mock_client_none:
         yield mock_client_none
 
 

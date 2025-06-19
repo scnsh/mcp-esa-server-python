@@ -261,8 +261,8 @@ cli = [
 
 [[package]]
 name = "mcp-esa-server"
-version = "0.1.0"
-source = { virtual = "." }
+version = "0.1.8"
+source = { editable = "." }
 dependencies = [
     { name = "mcp", extra = ["cli"] },
     { name = "python-dotenv" },
